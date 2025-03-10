@@ -23,4 +23,8 @@ class User < ApplicationRecord
   def deleted?
     deleted_at.present?
   end
+
+  def admin?
+    role == 'Admin'
+  end
 end
