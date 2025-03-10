@@ -1,28 +1,46 @@
 class UsersController < ApplicationController
-  before_action :authenticate_user!, only: [:index, :show, :update]
+  before_action :authenticate_user!
+  before_action :set_user, only: [:show, :update, :destroy]
 
+  def create
+    user = User.new(user_params)
+    authorize user
+
+    if user.save
+      render json: { user: user, message: "User created successfully" }, status: :created
+    else
+      render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+  
   def index
-    @users = current_user.organization.users
+    @users = policy_scope(User)
     render json: @users
   end
 
   def show
-    @user = current_user.organization.users.find(params[:id])
-    render json: @user
+    authorize @user
+    user = current_user.organization.users.find(params[:id])
+    render json: user
   end
 
   def update
-    @user = current_user.organization.users.find(params[:id])
-    if @user.update(user_params)
-      render json: @user
+    authorize @user
+    user = current_user.organization.users.find(params[:id])
+    if user.update(user_params)
+      render json: user
     else
-      render json: @user.errors, status: :unprocessable_entity
+      render json: user.errors, status: :unprocessable_entity
     end
   end
 
   private
 
+  def set_user
+    @user = User.find(params[:id])
+  end
+
   def user_params
-    params.require(:user).permit(:email, :role)
+    params.require(:user).permit(:email, :role, :organization_id, :first_name, :last_name, :dob, :doj, :password, :employee_id)
   end
 end
