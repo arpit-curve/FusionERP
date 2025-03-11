@@ -21,3 +21,7 @@ Metrics/MethodLength:
 # Configuration parameters: AllowedConstants.
 Style/Documentation:
   Enabled: false
+
+AllCops:
+  Exclude:
+    - bin/
