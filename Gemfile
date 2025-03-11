@@ -18,6 +18,7 @@ gem 'bcrypt', '~> 3.1.7'
 gem 'jwt'
 gem 'pundit'
 gem 'rack-cors'
+gem 'bundler-audit'
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 
