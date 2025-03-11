@@ -61,5 +61,3 @@ jobs:
 
       - name: Lint Ruby files
         run: bin/rubocop --parallel --exclude bin/**
-        run: bin/rubocop --parallel app/ lib/
-
