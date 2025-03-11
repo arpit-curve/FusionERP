@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 class CreateUsers < ActiveRecord::Migration[8.0]
-  def change
+  def change # rubocop:disable Metrics/AbcSize
     create_table :users do |t|
       t.string :first_name
       t.string :last_name
       t.datetime :dob
-      t.datetime :doj #date of joining
+      t.datetime :doj # date of joining
       t.string :employee_id
       t.string :gender
       t.string :email, null: false

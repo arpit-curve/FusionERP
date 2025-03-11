@@ -1,18 +1,20 @@
+# frozen_string_literal: true
+
 class UsersController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_user, only: [:show, :update, :destroy]
+  before_action :set_user, only: %i[show update destroy]
 
   def create
     user = User.new(user_params)
     authorize user
 
     if user.save
-      render json: { user: user, message: "User created successfully" }, status: :created
+      render json: { user: user, message: 'User created successfully' }, status: :created
     else
       render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
     end
   end
-  
+
   def index
     @users = policy_scope(User)
     render json: @users
@@ -41,6 +43,8 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:email, :role, :organization_id, :first_name, :last_name, :dob, :doj, :password, :employee_id)
+    permitted = %i[email first_name last_name dob doj password employee_id]
+    permitted << :role << :organization_id if current_user.admin?
+    params.require(:user).permit(permitted)
   end
 end
