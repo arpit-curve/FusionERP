@@ -2,7 +2,7 @@
 
 class ApplicationController < ActionController::API
   include Pundit
-
+  before_action :set_current_organization
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
   # Decode the JWT token
   def current_user
@@ -10,7 +10,7 @@ class ApplicationController < ActionController::API
     return unless decoded_token
 
     user_id = decoded_token[0]['user_id']
-    @current_user ||= User.find(user_id)
+    @current_user ||= User.find_by(id: user_id)
   end
 
   # Protect endpoints with this method
@@ -34,5 +34,9 @@ class ApplicationController < ActionController::API
     rescue JWT::DecodeError
       nil
     end
+  end
+
+  def set_current_organization
+    Current.organization_id = current_user.organization_id if current_user
   end
 end
