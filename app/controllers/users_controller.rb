@@ -16,8 +16,9 @@ class UsersController < ApplicationController
   end
 
   def index
-    @users = policy_scope(User)
-    render json: @users
+    organization_id = current_user.organization_id
+    presenter = UserListPresenter.new(organization_id)
+    render json: presenter.data
   end
 
   def show
@@ -43,7 +44,7 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    permitted = %i[email first_name last_name dob doj password employee_id]
+    permitted = %i[email first_name last_name dob doj password employee_id manager_id]
     permitted << :role << :organization_id if current_user.admin?
     params.require(:user).permit(permitted)
   end

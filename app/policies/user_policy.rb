@@ -27,13 +27,13 @@ class UserPolicy < ApplicationPolicy
   end
 
   # Scope for restricting access
-  class Scope < Scope
-    def resolve
-      if user.admin?
-        scope.all
-      else
-        scope.where(id: user.id) # Regular users can only see themselves
-      end
-    end
-  end
+  # class Scope < Scope
+  #   def resolve
+  #     if user.admin?
+  #       scope.all
+  #     else
+  #       scope.where(id: user.id) # Regular users can only see themselves
+  #     end
+  #   end
+  # end
 end
