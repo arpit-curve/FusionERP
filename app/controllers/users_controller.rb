@@ -8,6 +8,10 @@ class UsersController < ApplicationController
     user = User.new(user_params)
     authorize user
 
+    if params[:user][:profile_picture]
+      user.profile_picture.attach(params[:user][:profile_picture])
+    end
+
     if user.save
       render json: { user: user, message: 'User created successfully' }, status: :created
     else
@@ -22,17 +26,20 @@ class UsersController < ApplicationController
 
   def show
     authorize @user
-    user = current_user.organization.users.find(params[:id])
-    render json: user
+    render json: @user
   end
 
   def update
     authorize @user
-    user = current_user.organization.users.find(params[:id])
-    if user.update(user_params)
-      render json: user
+
+    if params[:user][:profile_picture]
+      @user.profile_picture.attach(params[:user][:profile_picture])
+    end
+
+    if @user.update(user_params)
+      render json: @user
     else
-      render json: user.errors, status: :unprocessable_entity
+      render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -43,7 +50,7 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    permitted = %i[email first_name last_name dob doj password employee_id]
+    permitted = %i[email first_name last_name dob doj password employee_id profile_picture]
     permitted << :role << :organization_id if current_user.admin?
     params.require(:user).permit(permitted)
   end
