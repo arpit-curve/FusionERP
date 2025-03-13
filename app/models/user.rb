@@ -39,4 +39,21 @@ class User < ApplicationRecord
     )
   end
 
+  def full_name
+    "#{first_name} #{last_name}"
+  end
+
+  def hierarchy
+    {
+      id: id,
+      name: full_name,
+      role: role,
+      manager_id: manager_id,
+      subordinates: subordinates.map(&:hierarchy)
+    }
+  end
+
+  def manager_name
+    manager&.full_name
+  end
 end

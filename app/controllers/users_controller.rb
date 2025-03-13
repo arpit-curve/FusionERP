@@ -20,8 +20,9 @@ class UsersController < ApplicationController
   end
 
   def index
-    @users = policy_scope(User)
-    render json: @users
+    organization_id = current_user.organization_id
+    presenter = UserListPresenter.new(organization_id)
+    render json: presenter.data
   end
 
   def show
