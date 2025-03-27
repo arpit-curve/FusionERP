@@ -18,6 +18,22 @@ org = Organization.create!(
 
 puts "✅ Organization created: #{org.name} (Slug: #{org.slug})"
 
+# create Department
+dep = Department.create!(
+  name: 'Operations',
+  organization: org
+)
+
+designation = Designation.create!(
+  name: 'Founder',
+  department: dep
+)
+
+role = Role.create!(
+  name: 'Admin',
+  organization: org
+)
+
 # Create Admin user
 admin_user = User.create!(
   first_name: 'Alice',
@@ -28,7 +44,8 @@ admin_user = User.create!(
   gender: 'Female',
   email: org.admin_email, # Using the admin email from the organization
   password: 'password123', # BCrypt will hash this
-  role: 'Admin',
+  role: role,
+  designation: designation,
   deleted_at: nil,
   deleted_by: nil,
   organization: org,

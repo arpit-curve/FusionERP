@@ -9,11 +9,13 @@ class DepartmentsController < ApplicationController
   end
 
   def show
+    authorize @department
     render json: @department
   end
 
   def create
     department = Department.build(department_params)
+    authorize department
 
     if department.save
       render json: department, status: :created
@@ -23,6 +25,7 @@ class DepartmentsController < ApplicationController
   end
 
   def update
+    authorize @department
     if @department.update(department_params)
       render json: @department
     else
@@ -31,6 +34,7 @@ class DepartmentsController < ApplicationController
   end
 
   def destroy
+    authorize @department
     @department.destroy
     head :no_content
   end
