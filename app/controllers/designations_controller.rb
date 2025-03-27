@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DesignationsController < ApplicationController
   before_action :set_department
   before_action :set_designation, only: %i[show update destroy]
