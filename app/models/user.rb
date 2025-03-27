@@ -11,6 +11,9 @@ class User < ApplicationRecord
   # Self-referential HR association
   belongs_to :hr, class_name: 'User', optional: true
   has_many :employees, class_name: 'User', foreign_key: 'hr_id'
+  
+  has_one_attached :profile_picture 
+
 
   belongs_to :designation
   delegate :department, to: :designation
@@ -31,6 +34,12 @@ class User < ApplicationRecord
 
   def admin?
     role == Role.find_by(name: 'Admin')
+  end
+
+  def as_json(options = {})
+    super(options).merge(
+      profile_picture_url: profile_picture.attached? ? Rails.application.routes.url_helpers.url_for(profile_picture) : nil
+    )
   end
 
   def full_name
