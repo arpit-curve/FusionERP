@@ -12,8 +12,11 @@ class User < ApplicationRecord
   belongs_to :hr, class_name: 'User', optional: true
   has_many :employees, class_name: 'User', foreign_key: 'hr_id'
 
+  belongs_to :designation
+  delegate :department, to: :designation
+
   validates :email, presence: true, uniqueness: true
-  validates :role, presence: true
+  belongs_to :role
   validates :password, length: { minimum: 6 }, allow_nil: true
 
   # Soft delete
@@ -27,7 +30,7 @@ class User < ApplicationRecord
   end
 
   def admin?
-    role == 'Admin'
+    role == Role.find_by(name: 'Admin')
   end
 
   def full_name

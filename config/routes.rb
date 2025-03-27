@@ -7,5 +7,8 @@ Rails.application.routes.draw do
   resources :dashboards, only: :index do
     get :dashboard, on: :collection
   end
-  resources :departments, only: %i[index show create update destroy]
+  resources :departments, only: %i[index show create update destroy] do
+    resources :designations
+  end
+  resources :roles
 end
