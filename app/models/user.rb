@@ -19,6 +19,8 @@ class User < ApplicationRecord
   belongs_to :role
   validates :password, length: { minimum: 6 }, allow_nil: true
 
+  default_scope { where(deleted_at: nil) }
+
   # Soft delete
   def soft_delete(deleted_by_user)
     update(deleted_at: Time.current, deleted_by: deleted_by_user.id)

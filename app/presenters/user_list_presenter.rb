@@ -13,7 +13,7 @@ class UserListPresenter
 
   def build_user_data
     users = User.includes(:manager) # Eager loads manager to avoid N+1 queries
-                .where(organization_id: @org_id)
+                .where(organization_id: @org_id, deleted_at: nil)
                 .select(:id, :dob, :doj, :email, :manager_id, :first_name, :last_name)
 
     users.as_json(methods: %i[full_name manager_name], except: %i[first_name last_name])
