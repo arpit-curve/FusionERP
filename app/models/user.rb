@@ -39,6 +39,25 @@ class User < ApplicationRecord
     "#{first_name} #{last_name}"
   end
 
+  def current_designation
+    designation&.name
+  end
+
+  def current_experience
+    return '0' if doj.nil?
+
+    today = Date.today
+    years = today.year - doj.year
+    months = today.month - doj.month
+
+    if months.negative?
+      years -= 1
+      months += 12
+    end
+
+    "#{years} years, #{months} months"
+  end
+
   def hierarchy
     {
       id: id,

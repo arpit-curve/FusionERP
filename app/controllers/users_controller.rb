@@ -17,7 +17,10 @@ class UsersController < ApplicationController
 
   def index
     organization_id = current_user.organization_id
-    presenter = UserListPresenter.new(organization_id)
+    page = params[:page] || 1
+    per_page = params[:per_page] || 10
+
+    presenter = UserListPresenter.new(organization_id, page, per_page)
     render json: presenter.data
   end
 
