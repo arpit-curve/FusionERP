@@ -2,9 +2,11 @@
 
 class ApplicationController < ActionController::API
   include Pundit
+
   before_action :set_current_organization
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
-  # Decode the JWT token
+
+  # Decode the JWT token and return the current user
   def current_user
     decoded_token = decode_token
     return unless decoded_token
@@ -24,11 +26,13 @@ class ApplicationController < ActionController::API
     render json: { error: 'You are not authorized to perform this action' }, status: :forbidden
   end
 
-  # Decode JWT Token
+  # Decode JWT Token with Blacklist Check
   def decode_token
     return unless request.headers['Authorization'].present?
 
     token = request.headers['Authorization'].split(' ').last
+    return if BlacklistedToken.exists?(token: token) # Check if token is blacklisted
+
     begin
       JWT.decode(token, Rails.application.secret_key_base, true, { algorithm: 'HS256' })
     rescue JWT::DecodeError

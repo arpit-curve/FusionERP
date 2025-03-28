@@ -29,12 +29,17 @@ class UsersController < ApplicationController
 
   def update
     authorize @user
-    user = current_user.organization.users.find(params[:id])
-    if user.update(user_params)
+    if @user.update(user_params)
       render json: user
     else
       render json: user.errors, status: :unprocessable_entity
     end
+  end
+
+  def destroy
+    authorize @user
+    @user.soft_delete(current_user)
+    head :no_content
   end
 
   private
@@ -44,8 +49,8 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    permitted = %i[email first_name last_name dob doj password employee_id manager_id]
-    permitted << :role << :organization_id if current_user.admin?
+    permitted = %i[email first_name last_name dob doj password employee_id manager_id designation_id role_id hr_id]
+    permitted << :organization_id if current_user.admin?
     params.require(:user).permit(permitted)
   end
 end
