@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserSerializer < ActiveModel::Serializer
   attributes :id, :full_name, :gender_string, :dob, :doj, :employee_id, :manager_name, :hr_name, :current_role,
              :current_designation, :current_experience, :profile_picture_url, :email
