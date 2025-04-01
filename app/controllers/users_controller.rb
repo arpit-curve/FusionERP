@@ -33,9 +33,9 @@ class UsersController < ApplicationController
   def update
     authorize @user
     if @user.update(user_params)
-      render json: user
+      render json: @user
     else
-      render json: user.errors, status: :unprocessable_entity
+      render json: @user.errors, status: :unprocessable_entity
     end
   end
 
@@ -52,7 +52,8 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    permitted = %i[email first_name last_name dob doj password employee_id manager_id designation_id role_id hr_id]
+    permitted = %i[email first_name last_name dob doj password employee_id manager_id designation_id role_id hr_id
+                   profile_picture]
     permitted << :organization_id if current_user.admin?
     params.require(:user).permit(permitted)
   end
