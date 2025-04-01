@@ -21,7 +21,7 @@ class UserListPresenter
                 .per(@per_page)
 
     {
-      users: users.as_json(methods: %i[full_name manager_name current_designation current_experience],
+      users: users.as_json(methods: %i[full_name manager_name current_designation current_experience profile_picture_url], # rubocop:disable Layout/LineLength
                            except: %i[first_name last_name]),
       pagination: {
         current_page: users.current_page,
