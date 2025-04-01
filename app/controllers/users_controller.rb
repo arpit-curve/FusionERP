@@ -26,8 +26,7 @@ class UsersController < ApplicationController
 
   def show
     authorize @user
-    user = current_user.organization.users.find(params[:id])
-    render json: user
+    render json: @user, serializer: UserSerializer
   end
 
   def update
@@ -49,11 +48,13 @@ class UsersController < ApplicationController
 
   def set_user
     @user = User.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: 'User not found' }, status: :not_found
   end
 
   def user_params
     permitted = %i[email first_name last_name dob doj password employee_id manager_id designation_id role_id hr_id
-                   profile_picture]
+                   profile_picture gender]
     permitted << :organization_id if current_user.admin?
     params.require(:user).permit(permitted)
   end

@@ -19,6 +19,8 @@ class User < ApplicationRecord
   belongs_to :role
 
   has_one_attached :profile_picture
+  has_one :department_as_head, ->(user) { where(organization_id: user.organization_id) },
+          class_name: 'Department', foreign_key: 'department_head_id'
 
   validates :password, length: { minimum: 6 }, allow_nil: true
 
@@ -73,6 +75,14 @@ class User < ApplicationRecord
 
   def manager_name
     manager&.full_name
+  end
+
+  def current_role
+    role&.name
+  end
+
+  def hr_name
+    hr&.full_name
   end
 
   def profile_picture_url
